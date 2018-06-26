@@ -116,7 +116,7 @@ func (p *keywordProcessor) ExtractKeywords(sentence string, option ...*Option) (
 				if curTrie.word != "" && (j == size-1 || !p.noboundaryWords[runes[j+1]]) {
 					foundKeyword = curTrie.word
 					if !extractOption.Longest {
-						res = append(res, &ExtractResult{foundKeyword, idx})
+						res = append(res, &ExtractResult{p.dicts[foundKeyword], idx})
 						idx = j
 					}
 				}
@@ -124,7 +124,7 @@ func (p *keywordProcessor) ExtractKeywords(sentence string, option ...*Option) (
 			if foundKeyword == "" {
 				idx++
 			} else if extractOption.Longest {
-				res = append(res, &ExtractResult{foundKeyword, idx})
+				res = append(res, &ExtractResult{p.dicts[foundKeyword], idx})
 				idx = j
 			}
 			begin = false
@@ -169,7 +169,7 @@ func (p *keywordProcessor) ReplaceKeywords(sentence string, option ...*Option) (
 					foundKeyword = curTrie.word
 					if !extractOption.Longest {
 						originalRunes = append(originalRunes[:idx], append([]rune(p.dicts[foundKeyword]), originalRunes[j:]...)...)
-						res = append(res, &ExtractResult{foundKeyword, idx})
+						res = append(res, &ExtractResult{p.dicts[foundKeyword], idx})
 						idx = j
 					}
 				}
@@ -178,7 +178,7 @@ func (p *keywordProcessor) ReplaceKeywords(sentence string, option ...*Option) (
 				idx++
 			} else if extractOption.Longest {
 				originalRunes = append(originalRunes[:idx], append([]rune(p.dicts[foundKeyword]), originalRunes[j:]...)...)
-				res = append(res, &ExtractResult{foundKeyword, idx})
+				res = append(res, &ExtractResult{p.dicts[foundKeyword], idx})
 				idx = j
 			}
 			begin = false

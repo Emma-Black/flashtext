@@ -111,7 +111,7 @@ func TestReplace(t *testing.T) {
 		for _, result := range res {
 			resultArray = append(resultArray, result.Keyword)
 		}
-		//assert.EqualValues(t, c.Keywords, resultArray, "insensitive keywords should match at sentence:"+c.Sentence)
+		assert.EqualValues(t, c.Keywords, resultArray, "insensitive keywords should match at sentence:"+c.Sentence)
 		assert.EqualValues(t, c.Expected, replaced, c.Explaination)
 	}
 
@@ -129,7 +129,7 @@ func TestReplace(t *testing.T) {
 		for _, result := range res {
 			resultArray = append(resultArray, result.Keyword)
 		}
-		//assert.EqualValues(t, c.KeywordsCaseSensitive, resultArray, "sensitive keywords should match at sentence:"+c.Sentence)
+		assert.EqualValues(t, c.KeywordsCaseSensitive, resultArray, "sensitive keywords should match at sentence:"+c.Sentence)
 		assert.EqualValues(t, c.ExpectedCaseSensitive, replaced, c.Explaination)
 	}
 }
