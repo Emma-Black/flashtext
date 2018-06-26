@@ -1,0 +1,271 @@
+[
+  {
+    "Sentence": "I like python",
+    "keyword_dict": {
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Keyword at the end of the sentence.",
+    "expected" : "I like Python",
+    "expected_case_sensitive" : "I like Python",
+    "Keywords": [
+      "Python"
+    ],
+    "keywords_case_sensitive": [
+      "Python"
+    ]
+  },
+  {
+    "Sentence": "python I like",
+    "keyword_dict": {
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Keyword at the beginning of the sentence.",
+    "expected" : "Python I like",
+    "expected_case_sensitive" : "Python I like",
+    "Keywords": [
+      "Python"
+    ],
+    "keywords_case_sensitive": [
+      "Python"
+    ]
+  },
+  {
+    "Sentence": "I like python also",
+    "keyword_dict": {
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Keyword before the end of the sentence.",
+    "expected" : "I like Python also",
+    "expected_case_sensitive" : "I like Python also",
+    "Keywords": [
+      "Python"
+    ],
+    "keywords_case_sensitive": [
+      "Python"
+    ]
+  },
+  {
+    "Sentence": "I like python java",
+    "keyword_dict": {
+      "Java": [
+        "java"
+      ],
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Multiple keywords in the end of the sentence.",
+    "expected" : "I like Python Java",
+    "expected_case_sensitive" : "I like Python Java",
+    "Keywords": [
+      "Python",
+      "Java"
+    ],
+    "keywords_case_sensitive": [
+      "Python",
+      "Java"
+    ]
+  },
+  {
+    "Sentence": "I like python and java",
+    "keyword_dict": {
+      "Java": [
+        "java"
+      ],
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Multiple keywords in the sentence with other word in between.",
+    "expected" : "I like Python and Java",
+    "expected_case_sensitive" : "I like Python and Java",
+    "Keywords": [
+      "Python",
+      "Java"
+    ],
+    "keywords_case_sensitive": [
+      "Python",
+      "Java"
+    ]
+  },
+  {
+    "Sentence": "python",
+    "keyword_dict": {
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Single keyword in the sentence.",
+    "expected" : "Python",
+    "expected_case_sensitive" : "Python",
+    "Keywords": [
+      "Python"
+    ],
+    "keywords_case_sensitive": [
+      "Python"
+    ]
+  },
+  {
+    "Sentence": " python",
+    "keyword_dict": {
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Single keyword in the sentence with space prefix.",
+    "expected" : " Python",
+    "expected_case_sensitive" : " Python",
+    "Keywords": [
+      "Python"
+    ],
+    "keywords_case_sensitive": [
+      "Python"
+    ]
+  },
+  {
+    "Sentence": "I like r",
+    "keyword_dict": {
+      "R": [
+        "r"
+      ]
+    },
+    "Explaination": "Single char keyword at the end of the sentence.",
+    "expected" : "I like R",
+    "expected_case_sensitive" : "I like R",
+    "Keywords": [
+      "R"
+    ],
+    "keywords_case_sensitive": [
+      "R"
+    ]
+  },
+  {
+    "Sentence": "r I like",
+    "keyword_dict": {
+      "R": [
+        "r"
+      ]
+    },
+    "Explaination": "Single char keyword at the beginning of the sentence.",
+    "expected" : "R I like",
+    "expected_case_sensitive" : "R I like",
+    "Keywords": [
+      "R"
+    ],
+    "keywords_case_sensitive": [
+      "R"
+    ]
+  },
+  {
+    "Sentence": "I like r also",
+    "keyword_dict": {
+      "R": [
+        "R"
+      ]
+    },
+    "Explaination": "Single char keyword before the end of the sentence.",
+    "expected" : "I like R also",
+    "expected_case_sensitive" : "I like r also",
+    "Keywords": [
+      "R"
+    ],
+    "keywords_case_sensitive": []
+  },
+  {
+    "Sentence": "I like R java",
+    "keyword_dict": {
+      "Java": [
+        "java"
+      ],
+      "R": [
+        "r"
+      ]
+    },
+    "Explaination": "Multiple keywords in the end of the sentence.",
+    "expected" : "I like R Java",
+    "expected_case_sensitive" : "I like R Java",
+    "Keywords": [
+      "R",
+      "Java"
+    ],
+    "keywords_case_sensitive": [
+      "Java"
+    ]
+  },
+  {
+    "Sentence": "I like R and java",
+    "keyword_dict": {
+      "Java": [
+        "java"
+      ],
+      "R": [
+        "r"
+      ]
+    },
+    "Explaination": "Multiple keywords in the sentence with other word in between.",
+    "expected" : "I like R and Java",
+    "expected_case_sensitive" : "I like R and Java",
+    "Keywords": [
+      "R",
+      "Java"
+    ],
+    "keywords_case_sensitive": [
+      "Java"
+    ]
+  },
+  {
+    "Sentence": "R",
+    "keyword_dict": {
+      "R": [
+        "r"
+      ]
+    },
+    "Explaination": "Single character keyword in the sentence.",
+    "expected" : "R",
+    "expected_case_sensitive" : "R",
+    "Keywords": [
+      "R"
+    ],
+    "keywords_case_sensitive": []
+  },
+  {
+    "Sentence": " r",
+    "keyword_dict": {
+      "R": [
+        "r"
+      ]
+    },
+    "Explaination": "Single character keyword in the sentence with space prefix.",
+    "expected" : " R",
+    "expected_case_sensitive" : " R",
+    "Keywords": [
+      "R"
+    ],
+    "keywords_case_sensitive": [
+      "R"
+    ]
+  },
+  {
+    "Sentence": "I like distributed super computing",
+    "keyword_dict": {
+      "Distributed Super Computing": [
+        "distributed super computing"
+      ]
+    },
+    "Explaination": "Multi word Keyword at the end of the sentence.",
+    "expected" : "I like Distributed Super Computing",
+    "expected_case_sensitive" : "I like Distributed Super Computing",
+    "Keywords": [
+      "Distributed Super Computing"
+    ],
+    "keywords_case_sensitive": [
+      "Distributed Super Computing"
+    ]
+  }
+]

@@ -116,7 +116,7 @@ func (p *keywordProcessor) ExtractKeywords(sentence string, option ...*Option) (
 				if curTrie.word != "" && (j == size-1 || !p.noboundaryWords[runes[j+1]]) {
 					foundKeyword = curTrie.word
 					if !extractOption.Longest {
-						res = append(res, &ExtractResult{p.dicts[foundKeyword], idx})
+						res = append(res, &ExtractResult{foundKeyword, idx})
 						idx = j
 					}
 				}
@@ -124,13 +124,67 @@ func (p *keywordProcessor) ExtractKeywords(sentence string, option ...*Option) (
 			if foundKeyword == "" {
 				idx++
 			} else if extractOption.Longest {
-				res = append(res, &ExtractResult{p.dicts[foundKeyword], idx})
+				res = append(res, &ExtractResult{foundKeyword, idx})
 				idx = j
 			}
 			begin = false
 		}
 	}
 	return res
+}
+
+func (p *keywordProcessor) ReplaceKeywords(sentence string, option ...*Option) (filteredSentence string, res []*ExtractResult) {
+	extractOption := defaultOption
+	if len(option) > 0 {
+		extractOption = option[0]
+	}
+	res = make([]*ExtractResult, 0, 20)
+	originalRunes := []rune(sentence)
+	if !p.caseSensitive {
+		sentence = strings.ToLower(sentence)
+	}
+	runes := []rune(sentence)
+	size := len(runes)
+	idx := 0
+	begin := true
+	var curTrie *trie
+	for idx < size {
+		curTrie = p.keytrie
+		c := runes[idx]
+		if _, ok := p.noboundaryWords[c]; !ok {
+			idx++
+			begin = true
+		} else if !begin {
+			idx++
+		} else {
+			var j = idx
+			foundKeyword := ""
+			for j = idx; j < size; j++ {
+				c = runes[j]
+				curTrie = curTrie.next[c]
+				if curTrie == nil {
+					break
+				}
+				if curTrie.word != "" && (j == size-1 || !p.noboundaryWords[runes[j+1]]) {
+					foundKeyword = curTrie.word
+					if !extractOption.Longest {
+						originalRunes = append(originalRunes[:idx], append([]rune(p.dicts[foundKeyword]), originalRunes[j:]...)...)
+						res = append(res, &ExtractResult{foundKeyword, idx})
+						idx = j
+					}
+				}
+			}
+			if foundKeyword == "" {
+				idx++
+			} else if extractOption.Longest {
+				originalRunes = append(originalRunes[:idx], append([]rune(p.dicts[foundKeyword]), originalRunes[j:]...)...)
+				res = append(res, &ExtractResult{foundKeyword, idx})
+				idx = j
+			}
+			begin = false
+		}
+	}
+	return string(originalRunes), res
 }
 
 func (p *keywordProcessor) RemoveKeywords(keywords ...string) {
