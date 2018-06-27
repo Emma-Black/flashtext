@@ -20,7 +20,7 @@ func TestExtract(t *testing.T) {
 	//case insensitive
 	for _, c := range extractCases {
 		p := NewKeywordProcessor()
-		p.SetCaseSenstive(false)
+		p.SetCaseSensitive(false)
 		for cleanName, keywords := range c.KeywordDict {
 			for _, keyword := range keywords {
 				p.AddKeywordAndName(keyword, cleanName)
@@ -37,7 +37,7 @@ func TestExtract(t *testing.T) {
 	//case sensitive
 	for _, c := range extractCases {
 		p := NewKeywordProcessor()
-		p.SetCaseSenstive(true)
+		p.SetCaseSensitive(true)
 		for cleanName, keywords := range c.KeywordDict {
 			for _, keyword := range keywords {
 				p.AddKeywordAndName(keyword, cleanName)
@@ -57,7 +57,7 @@ func TestRemove(t *testing.T) {
 	//case insensitive
 	for _, c := range removeCases {
 		p := NewKeywordProcessor()
-		p.SetCaseSenstive(false)
+		p.SetCaseSensitive(false)
 		for cleanName, keywords := range c.KeywordDict {
 			for _, keyword := range keywords {
 				p.AddKeywordAndName(keyword, cleanName)
@@ -77,7 +77,7 @@ func TestRemove(t *testing.T) {
 	//case sensitive
 	for _, c := range removeCases {
 		p := NewKeywordProcessor()
-		p.SetCaseSenstive(true)
+		p.SetCaseSensitive(true)
 		for cleanName, keywords := range c.KeywordDict {
 			for _, keyword := range keywords {
 				p.AddKeywordAndName(keyword, cleanName)
@@ -100,7 +100,7 @@ func TestReplace(t *testing.T) {
 	//case insensitive
 	for _, c := range replaceCases {
 		p := NewKeywordProcessor()
-		p.SetCaseSenstive(false)
+		p.SetCaseSensitive(false)
 		for cleanName, keywords := range c.KeywordDict {
 			for _, keyword := range keywords {
 				p.AddKeywordAndName(keyword, cleanName)
@@ -118,7 +118,7 @@ func TestReplace(t *testing.T) {
 	//case sensitive
 	for _, c := range replaceCases {
 		p := NewKeywordProcessor()
-		p.SetCaseSenstive(true)
+		p.SetCaseSensitive(true)
 		for cleanName, keywords := range c.KeywordDict {
 			for _, keyword := range keywords {
 				p.AddKeywordAndName(keyword, cleanName)

@@ -55,7 +55,7 @@ func NewKeywordProcessor() *KeywordProcessor {
 	return p
 }
 
-func (p *KeywordProcessor) SetCaseSenstive(caseSenstive bool) {
+func (p *KeywordProcessor) SetCaseSensitive(caseSenstive bool) {
 	p.caseSensitive = caseSenstive
 }
 

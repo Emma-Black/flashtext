@@ -28,7 +28,7 @@ Here is the python implement:  [https://github.com/vi3k6i5/flashtext](https://gi
     func main() {
         processor := flashtext.NewKeywordProcessor()
         // set the caseSensitive to false
-        processor.SetCaseSenstive(false)
+        processor.SetCaseSensitive(false)
         processor.AddKeywords("I love go", "I like python")
         processor.AddKeywordAndName("java", "JavaEE")
         // set to find the longest keywords
@@ -54,7 +54,7 @@ Here is the python implement:  [https://github.com/vi3k6i5/flashtext](https://gi
 
     func main() {
         badWordProcessor := flashtext.NewKeywordProcessor()
-        badWordProcessor.SetCaseSenstive(false)
+        badWordProcessor.SetCaseSensitive(false)
 
         // Add some naughty language
         badWordProcessor.AddKeywordAndName("heck", "{FOUL-LANGUAGE}")
