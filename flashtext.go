@@ -87,7 +87,6 @@ func (p *keywordProcessor) ExtractKeywords(sentence string, option ...*Option) (
 	if len(option) > 0 {
 		extractOption = option[0]
 	}
-	res = make([]*ExtractResult, 0, 20)
 	if !p.caseSensitive {
 		sentence = strings.ToLower(sentence)
 	}
@@ -138,7 +137,6 @@ func (p *keywordProcessor) ReplaceKeywords(sentence string, option ...*Option) (
 	if len(option) > 0 {
 		extractOption = option[0]
 	}
-	res = make([]*ExtractResult, 0, 20)
 	originalRunes := []rune(sentence)
 	if !p.caseSensitive {
 		sentence = strings.ToLower(sentence)
