@@ -10,7 +10,7 @@ Here is the python implement:  [https://github.com/vi3k6i5/flashtext](https://gi
 ## Installation
 
 ```
-    $ go get github.com/sundy-li/flashtext
+    $ go get github.com/Emma-Black/flashtext
 
 ```
 
@@ -22,8 +22,7 @@ Here is the python implement:  [https://github.com/vi3k6i5/flashtext](https://gi
 
     import (
         "fmt"
-
-        "github.com/sundy-li/flashtext"
+        "github.com/Emma-Black/flashtext"
     )
 
     func main() {
@@ -44,3 +43,28 @@ Here is the python implement:  [https://github.com/vi3k6i5/flashtext](https://gi
 ```
  
 
+- Replace keywords
+```
+    package main
+
+    import (
+        "fmt"
+        "github.com/Emma-Black/flashtext"
+    )
+
+    func main() {
+        badWordProcessor := flashtext.NewKeywordProcessor()
+        badWordProcessor.SetCaseSenstive(false)
+
+        // Add some naughty language
+        badWordProcessor.AddKeywordAndName("heck", "{FOUL-LANGUAGE}")
+        badWordProcessor.AddKeywordAndName("jerk", "{FOUL-LANGUAGE}")
+
+        // Clean it up!
+        cleaned, _ := processor.ReplaceKeywords("You are a jerk, what the heck are you doing!!")
+
+        fmt.Println(cleaned)
+    }
+    // Much better now
+    // You are a {FOUL-LANGUAGE}, what the {FOUL-LANGUAGE} are you doing!!
+```
