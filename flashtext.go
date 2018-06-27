@@ -5,8 +5,8 @@ import (
 	"sync"
 )
 
-// keywordProcessor is the processor of keyword extract
-type keywordProcessor struct {
+// KeywordProcessor is the processor of keyword extract
+type KeywordProcessor struct {
 	// dicts store the keyword => cleanName
 	dicts map[string]string
 	// keytrie is the trie struct
@@ -38,8 +38,8 @@ var (
 	}
 )
 
-func NewKeywordProcessor() *keywordProcessor {
-	p := &keywordProcessor{
+func NewKeywordProcessor() *KeywordProcessor {
+	p := &KeywordProcessor{
 		dicts:           make(map[string]string),
 		noboundaryWords: make(map[rune]bool),
 		keytrie:         NewTrie('r'),
@@ -55,23 +55,23 @@ func NewKeywordProcessor() *keywordProcessor {
 	return p
 }
 
-func (p *keywordProcessor) SetCaseSenstive(caseSenstive bool) {
+func (p *KeywordProcessor) SetCaseSenstive(caseSenstive bool) {
 	p.caseSensitive = caseSenstive
 }
 
-func (p *keywordProcessor) AddNoBoundaryWords(noboundaryWords ...rune) {
+func (p *KeywordProcessor) AddNoBoundaryWords(noboundaryWords ...rune) {
 	for _, w := range noboundaryWords {
 		p.noboundaryWords[w] = true
 	}
 }
 
-func (p *keywordProcessor) AddKeywords(keywords ...string) {
+func (p *KeywordProcessor) AddKeywords(keywords ...string) {
 	for _, keyword := range keywords {
 		p.AddKeywordAndName(keyword, keyword)
 	}
 }
 
-func (p *keywordProcessor) AddKeywordAndName(keyword string, cleanName string) {
+func (p *KeywordProcessor) AddKeywordAndName(keyword string, cleanName string) {
 	p.Lock()
 	defer p.Unlock()
 
@@ -82,7 +82,7 @@ func (p *keywordProcessor) AddKeywordAndName(keyword string, cleanName string) {
 	p.dicts[keyword] = cleanName
 }
 
-func (p *keywordProcessor) ExtractKeywords(sentence string, option ...*Option) (res []*ExtractResult) {
+func (p *KeywordProcessor) ExtractKeywords(sentence string, option ...*Option) (res []*ExtractResult) {
 	extractOption := defaultOption
 	if len(option) > 0 {
 		extractOption = option[0]
@@ -132,7 +132,7 @@ func (p *keywordProcessor) ExtractKeywords(sentence string, option ...*Option) (
 	return res
 }
 
-func (p *keywordProcessor) ReplaceKeywords(sentence string, option ...*Option) (filteredSentence string, res []*ExtractResult) {
+func (p *KeywordProcessor) ReplaceKeywords(sentence string, option ...*Option) (filteredSentence string, res []*ExtractResult) {
 	extractOption := defaultOption
 	if len(option) > 0 {
 		extractOption = option[0]
@@ -185,7 +185,7 @@ func (p *keywordProcessor) ReplaceKeywords(sentence string, option ...*Option) (
 	return string(originalRunes), res
 }
 
-func (p *keywordProcessor) RemoveKeywords(keywords ...string) {
+func (p *KeywordProcessor) RemoveKeywords(keywords ...string) {
 	p.Lock()
 	defer p.Unlock()
 	for _, keyword := range keywords {
@@ -196,6 +196,6 @@ func (p *keywordProcessor) RemoveKeywords(keywords ...string) {
 	}
 }
 
-func (p *keywordProcessor) Exists(keyword string) bool {
+func (p *KeywordProcessor) Exists(keyword string) bool {
 	return p.keytrie.exists(keyword)
 }
