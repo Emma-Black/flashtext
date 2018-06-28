@@ -144,6 +144,7 @@ func (p *KeywordProcessor) ReplaceKeywords(sentence string, option ...*Option) (
 	runes := []rune(sentence)
 	size := len(runes)
 	idx := 0
+	offset := 0
 	begin := true
 	var curTrie *trie
 	for idx < size {
@@ -166,7 +167,9 @@ func (p *KeywordProcessor) ReplaceKeywords(sentence string, option ...*Option) (
 				if curTrie.word != "" && (j == size-1 || !p.noboundaryWords[runes[j+1]]) {
 					foundKeyword = curTrie.word
 					if !extractOption.Longest {
-						originalRunes = append(originalRunes[:idx], append([]rune(p.dicts[foundKeyword]), originalRunes[j:]...)...)
+						replacement := []rune(p.dicts[foundKeyword])
+						originalRunes = append(originalRunes[:idx+offset], append(replacement, originalRunes[j+offset:]...)...)
+						offset = offset + (len(replacement) - len([]rune(foundKeyword)))
 						res = append(res, &ExtractResult{p.dicts[foundKeyword], idx})
 						idx = j
 					}
@@ -175,7 +178,9 @@ func (p *KeywordProcessor) ReplaceKeywords(sentence string, option ...*Option) (
 			if foundKeyword == "" {
 				idx++
 			} else if extractOption.Longest {
-				originalRunes = append(originalRunes[:idx], append([]rune(p.dicts[foundKeyword]), originalRunes[j:]...)...)
+				replacement := []rune(p.dicts[foundKeyword])
+				originalRunes = append(originalRunes[:idx+offset], append(replacement, originalRunes[j+offset:]...)...)
+				offset = offset + (len(replacement) - len([]rune(foundKeyword)))
 				res = append(res, &ExtractResult{p.dicts[foundKeyword], idx})
 				idx = j
 			}
@@ -183,6 +188,62 @@ func (p *KeywordProcessor) ReplaceKeywords(sentence string, option ...*Option) (
 		}
 	}
 	return string(originalRunes), res
+}
+
+func (p *KeywordProcessor) MaskKeywords(sentence string, maskingFunction func(string) string, option ...*Option) (filteredSentence string) {
+	extractOption := defaultOption
+	if len(option) > 0 {
+		extractOption = option[0]
+	}
+	originalRunes := []rune(sentence)
+	if !p.caseSensitive {
+		sentence = strings.ToLower(sentence)
+	}
+	runes := []rune(sentence)
+	size := len(runes)
+	idx := 0
+	offset := 0
+	begin := true
+	var curTrie *trie
+	for idx < size {
+		curTrie = p.keytrie
+		c := runes[idx]
+		if _, ok := p.noboundaryWords[c]; !ok {
+			idx++
+			begin = true
+		} else if !begin {
+			idx++
+		} else {
+			var j = idx
+			foundKeyword := ""
+			for j = idx; j < size; j++ {
+				c = runes[j]
+				curTrie = curTrie.next[c]
+				if curTrie == nil {
+					break
+				}
+				if curTrie.word != "" && (j == size-1 || !p.noboundaryWords[runes[j+1]]) {
+					foundKeyword = curTrie.word
+					if !extractOption.Longest {
+						replacement := []rune(maskingFunction(foundKeyword))
+						originalRunes = append(originalRunes[:idx+offset], append(replacement, originalRunes[j+offset:]...)...)
+						offset = offset + (len(replacement) - len([]rune(foundKeyword)))
+						idx = j
+					}
+				}
+			}
+			if foundKeyword == "" {
+				idx++
+			} else if extractOption.Longest {
+				replacement := []rune(maskingFunction(foundKeyword))
+				originalRunes = append(originalRunes[:idx+offset], append(replacement, originalRunes[j+offset:]...)...)
+				offset = offset + (len(replacement) - len([]rune(foundKeyword)))
+				idx = j
+			}
+			begin = false
+		}
+	}
+	return string(originalRunes)
 }
 
 func (p *KeywordProcessor) RemoveKeywords(keywords ...string) {

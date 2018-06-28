@@ -1,18 +1,20 @@
 package flashtext
 
 import (
+	"bytes"
 	"encoding/json"
+	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"path/filepath"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
+	"unicode/utf8"
 )
 
 var (
 	extractCases = make([]*ExtractorTestCase, 0, 100)
 	removeCases  = make([]*RemoveTestCase, 0, 100)
 	replaceCases = make([]*ReplaceTestCase, 0, 100)
+	maskCases    = make([]*MaskTestCase, 0, 100)
 )
 
 func TestExtract(t *testing.T) {
@@ -134,6 +136,47 @@ func TestReplace(t *testing.T) {
 	}
 }
 
+func LastNameReplacement(lastName string) string {
+	var buffer bytes.Buffer
+	buffer.WriteString(":")
+	for i := 0; i < utf8.RuneCountInString(lastName); i++ {
+		buffer.WriteString("X")
+	}
+	buffer.WriteString(":")
+	return buffer.String()
+}
+
+func TestMask(t *testing.T) {
+	InitMask(t)
+	//case insensitive
+	for _, c := range maskCases {
+		p := NewKeywordProcessor()
+		p.SetCaseSensitive(false)
+		for cleanName, keywords := range c.KeywordDict {
+			for _, keyword := range keywords {
+				p.AddKeywordAndName(keyword, cleanName)
+			}
+		}
+		replaced := p.MaskKeywords(c.Sentence, LastNameReplacement)
+
+		assert.EqualValues(t, c.Expected, replaced, c.Explaination)
+	}
+
+	//case sensitive
+	for _, c := range maskCases {
+		p := NewKeywordProcessor()
+		p.SetCaseSensitive(true)
+		for cleanName, keywords := range c.KeywordDict {
+			for _, keyword := range keywords {
+				p.AddKeywordAndName(keyword, cleanName)
+			}
+		}
+		replaced := p.MaskKeywords(c.Sentence, LastNameReplacement)
+
+		assert.EqualValues(t, c.ExpectedCaseSensitive, replaced, c.Explaination)
+	}
+}
+
 // read test_cases json files
 func Init(t *testing.T) {
 	err := json.Unmarshal(helperLoadBytes(t, "extracts.json"), &extractCases)
@@ -144,6 +187,13 @@ func Init(t *testing.T) {
 
 func InitReplace(t *testing.T) {
 	err := json.Unmarshal(helperLoadBytes(t, "replaces.json"), &replaceCases)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func InitMask(t *testing.T) {
+	err := json.Unmarshal(helperLoadBytes(t, "masks.json"), &maskCases)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -182,4 +232,12 @@ type ReplaceTestCase struct {
 	KeywordsCaseSensitive []string `json:"keywords_case_sensitive"`
 	Expected              string   `json:"expected"`
 	ExpectedCaseSensitive string   `json:"expected_case_sensitive"`
+}
+
+type MaskTestCase struct {
+	Sentence              string
+	KeywordDict           map[string][]string `json:"keyword_dict"`
+	Explaination          string
+	Expected              string `json:"expected"`
+	ExpectedCaseSensitive string `json:"expected_case_sensitive"`
 }

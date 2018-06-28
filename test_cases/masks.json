@@ -1,0 +1,180 @@
+[
+  {
+    "Sentence": "I like python",
+    "keyword_dict": {
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Keyword at the end of the sentence.",
+    "expected" : "I like :XXXXXX:",
+    "expected_case_sensitive" : "I like :XXXXXX:"
+  },
+  {
+    "Sentence": "python I like",
+    "keyword_dict": {
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Keyword at the beginning of the sentence.",
+    "expected" : ":XXXXXX: I like",
+    "expected_case_sensitive" : ":XXXXXX: I like"
+  },
+  {
+    "Sentence": "I like python also",
+    "keyword_dict": {
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Keyword before the end of the sentence.",
+    "expected" : "I like :XXXXXX: also",
+    "expected_case_sensitive" : "I like :XXXXXX: also"
+  },
+  {
+    "Sentence": "I like python java",
+    "keyword_dict": {
+      "Java": [
+        "java"
+      ],
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Multiple keywords in the end of the sentence.",
+    "expected" : "I like :XXXXXX: :XXXX:",
+    "expected_case_sensitive" : "I like :XXXXXX: :XXXX:"
+  },
+  {
+    "Sentence": "I like python and java",
+    "keyword_dict": {
+      "Java": [
+        "java"
+      ],
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Multiple keywords in the sentence with other word in between.",
+    "expected" : "I like :XXXXXX: and :XXXX:",
+    "expected_case_sensitive" : "I like :XXXXXX: and :XXXX:"
+  },
+  {
+    "Sentence": "python",
+    "keyword_dict": {
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Single keyword in the sentence.",
+    "expected" : ":XXXXXX:",
+    "expected_case_sensitive" : ":XXXXXX:"
+  },
+  {
+    "Sentence": " python",
+    "keyword_dict": {
+      "Python": [
+        "python"
+      ]
+    },
+    "Explaination": "Single keyword in the sentence with space prefix.",
+    "expected" : " :XXXXXX:",
+    "expected_case_sensitive" : " :XXXXXX:"
+  },
+  {
+    "Sentence": "I like r",
+    "keyword_dict": {
+      "R": [
+        "r"
+      ]
+    },
+    "Explaination": "Single char keyword at the end of the sentence.",
+    "expected" : "I like :X:",
+    "expected_case_sensitive" : "I like :X:"
+  },
+  {
+    "Sentence": "r I like",
+    "keyword_dict": {
+      "R": [
+        "r"
+      ]
+    },
+    "Explaination": "Single char keyword at the beginning of the sentence.",
+    "expected" : ":X: I like",
+    "expected_case_sensitive" : ":X: I like"
+  },
+  {
+    "Sentence": "I like r also",
+    "keyword_dict": {
+      "R": [
+        "R"
+      ]
+    },
+    "Explaination": "Single char keyword before the end of the sentence.",
+    "expected" : "I like :X: also",
+    "expected_case_sensitive" : "I like r also"
+  },
+  {
+    "Sentence": "I like R java",
+    "keyword_dict": {
+      "Java": [
+        "java"
+      ],
+      "R": [
+        "r"
+      ]
+    },
+    "Explaination": "Multiple keywords in the end of the sentence.",
+    "expected" : "I like :X: :XXXX:",
+    "expected_case_sensitive" : "I like R :XXXX:"
+  },
+  {
+    "Sentence": "I like R and java",
+    "keyword_dict": {
+      "Java": [
+        "java"
+      ],
+      "R": [
+        "r"
+      ]
+    },
+    "Explaination": "Multiple keywords in the sentence with other word in between.",
+    "expected" : "I like :X: and :XXXX:",
+    "expected_case_sensitive" : "I like R and :XXXX:"
+  },
+  {
+    "Sentence": "R",
+    "keyword_dict": {
+      "R": [
+        "r"
+      ]
+    },
+    "Explaination": "Single character keyword in the sentence.",
+    "expected" : ":X:",
+    "expected_case_sensitive" : "R"
+  },
+  {
+    "Sentence": " r",
+    "keyword_dict": {
+      "R": [
+        "r"
+      ]
+    },
+    "Explaination": "Single character keyword in the sentence with space prefix.",
+    "expected" : " :X:",
+    "expected_case_sensitive" : " :X:"
+  },
+  {
+    "Sentence": "I think that you are a big ol jerk and a bully!!",
+    "keyword_dict": {
+      "MEAN NAMES": [
+        "jerk",
+        "bully"
+      ]
+    },
+    "Explaination": "Multi word Keyword with differeing lengths.",
+    "expected" : "I think that you are a big ol :XXXX: and a :XXXXX:!!",
+    "expected_case_sensitive" : "I think that you are a big ol :XXXX: and a :XXXXX:!!"
+  }
+]
