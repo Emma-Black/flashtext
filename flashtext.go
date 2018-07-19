@@ -13,6 +13,8 @@ type KeywordProcessor struct {
 	keytrie *trie
 	// caseSensitive or not
 	caseSensitive bool
+	// input lowerCased or not (only makes a difference when ignoring case on input
+	inputLowercased bool
 	// noboundaryWords default to a-zA-Z0-9_
 	noboundaryWords map[rune]bool
 	// lock for the map write
@@ -27,14 +29,12 @@ type ExtractResult struct {
 
 type Option struct {
 	// Longest set to true will just match the longest keyword,
-	Longest  bool
-	SpanInfo bool
+	Longest bool
 }
 
 var (
 	defaultOption = &Option{
-		Longest:  true,
-		SpanInfo: false,
+		Longest: true,
 	}
 )
 
@@ -43,6 +43,8 @@ func NewKeywordProcessor() *KeywordProcessor {
 		dicts:           make(map[string]string),
 		noboundaryWords: make(map[rune]bool),
 		keytrie:         NewTrie('r'),
+		caseSensitive:   false,
+		inputLowercased: true,
 	}
 	for i := 0; i < 26; i++ {
 		p.AddNoBoundaryWords(rune('a' + i))
@@ -55,8 +57,17 @@ func NewKeywordProcessor() *KeywordProcessor {
 	return p
 }
 
-func (p *KeywordProcessor) SetCaseSensitive(caseSenstive bool) {
-	p.caseSensitive = caseSenstive
+func (p *KeywordProcessor) SetCaseSensitive(caseSensitive bool) {
+	p.caseSensitive = caseSensitive
+}
+
+func (p *KeywordProcessor) RemoveNoBoundaryWord(noboundaryWords ...rune) {
+	for _, w := range noboundaryWords {
+		_, exists := p.noboundaryWords[w]
+		if exists {
+			delete(p.noboundaryWords, w)
+		}
+	}
 }
 
 func (p *KeywordProcessor) AddNoBoundaryWords(noboundaryWords ...rune) {
@@ -67,8 +78,22 @@ func (p *KeywordProcessor) AddNoBoundaryWords(noboundaryWords ...rune) {
 
 func (p *KeywordProcessor) AddKeywords(keywords ...string) {
 	for _, keyword := range keywords {
-		p.AddKeywordAndName(keyword, keyword)
+		p.AddKeyword(keyword, false)
 	}
+}
+
+func (p *KeywordProcessor) AddKeyword(keyword string, ignoreCase bool) {
+	p.Lock()
+	defer p.Unlock()
+
+	if !ignoreCase && !p.caseSensitive {
+		if p.inputLowercased {
+			keyword = strings.ToLower(keyword)
+		} else {
+			keyword = strings.ToUpper(keyword)
+		}
+	}
+	p.keytrie.addKeyword(keyword)
 }
 
 func (p *KeywordProcessor) AddKeywordAndName(keyword string, cleanName string) {
@@ -76,7 +101,11 @@ func (p *KeywordProcessor) AddKeywordAndName(keyword string, cleanName string) {
 	defer p.Unlock()
 
 	if !p.caseSensitive {
-		keyword = strings.ToLower(keyword)
+		if p.inputLowercased {
+			keyword = strings.ToLower(keyword)
+		} else {
+			keyword = strings.ToUpper(keyword)
+		}
 	}
 	p.keytrie.addKeyword(keyword)
 	p.dicts[keyword] = cleanName
@@ -88,7 +117,11 @@ func (p *KeywordProcessor) ExtractKeywords(sentence string, option ...*Option) (
 		extractOption = option[0]
 	}
 	if !p.caseSensitive {
-		sentence = strings.ToLower(sentence)
+		if p.inputLowercased {
+			sentence = strings.ToLower(sentence)
+		} else {
+			sentence = strings.ToUpper(sentence)
+		}
 	}
 	runes := []rune(sentence)
 	size := len(runes)
@@ -139,7 +172,11 @@ func (p *KeywordProcessor) ReplaceKeywords(sentence string, option ...*Option) (
 	}
 	originalRunes := []rune(sentence)
 	if !p.caseSensitive {
-		sentence = strings.ToLower(sentence)
+		if p.inputLowercased {
+			sentence = strings.ToLower(sentence)
+		} else {
+			sentence = strings.ToUpper(sentence)
+		}
 	}
 	runes := []rune(sentence)
 	size := len(runes)
@@ -168,7 +205,7 @@ func (p *KeywordProcessor) ReplaceKeywords(sentence string, option ...*Option) (
 					foundKeyword = curTrie.word
 					if !extractOption.Longest {
 						replacement := []rune(p.dicts[foundKeyword])
-						originalRunes = append(originalRunes[:idx+offset], append(replacement, originalRunes[j+offset:]...)...)
+						originalRunes = append(originalRunes[:idx+offset], append(replacement, originalRunes[j+1+offset:]...)...)
 						offset = offset + (len(replacement) - len([]rune(foundKeyword)))
 						res = append(res, &ExtractResult{p.dicts[foundKeyword], idx})
 						idx = j
@@ -197,7 +234,11 @@ func (p *KeywordProcessor) MaskKeywords(sentence string, maskingFunction func(st
 	}
 	originalRunes := []rune(sentence)
 	if !p.caseSensitive {
-		sentence = strings.ToLower(sentence)
+		if p.inputLowercased {
+			sentence = strings.ToLower(sentence)
+		} else {
+			sentence = strings.ToUpper(sentence)
+		}
 	}
 	runes := []rune(sentence)
 	size := len(runes)
@@ -226,7 +267,7 @@ func (p *KeywordProcessor) MaskKeywords(sentence string, maskingFunction func(st
 					foundKeyword = curTrie.word
 					if !extractOption.Longest {
 						replacement := []rune(maskingFunction(foundKeyword))
-						originalRunes = append(originalRunes[:idx+offset], append(replacement, originalRunes[j+offset:]...)...)
+						originalRunes = append(originalRunes[:idx+offset], append(replacement, originalRunes[j+1+offset:]...)...)
 						offset = offset + (len(replacement) - len([]rune(foundKeyword)))
 						idx = j
 					}

@@ -68,7 +68,7 @@ func TestRemove(t *testing.T) {
 		for _, keywords := range c.RemoveKeywordDict {
 			p.RemoveKeywords(keywords...)
 		}
-		res := p.ExtractKeywords(c.Sentence, &Option{Longest: true})
+		res := p.ExtractKeywords(c.Sentence)
 		resultArray := []string{}
 		for _, result := range res {
 			resultArray = append(resultArray, result.Keyword)
@@ -108,7 +108,7 @@ func TestReplace(t *testing.T) {
 				p.AddKeywordAndName(keyword, cleanName)
 			}
 		}
-		replaced, res := p.ReplaceKeywords(c.Sentence, &Option{Longest: true})
+		replaced, res := p.ReplaceKeywords(c.Sentence)
 		resultArray := []string{}
 		for _, result := range res {
 			resultArray = append(resultArray, result.Keyword)
@@ -126,7 +126,7 @@ func TestReplace(t *testing.T) {
 				p.AddKeywordAndName(keyword, cleanName)
 			}
 		}
-		replaced, res := p.ReplaceKeywords(c.Sentence, &Option{Longest: true})
+		replaced, res := p.ReplaceKeywords(c.Sentence)
 		resultArray := []string{}
 		for _, result := range res {
 			resultArray = append(resultArray, result.Keyword)
@@ -136,7 +136,7 @@ func TestReplace(t *testing.T) {
 	}
 }
 
-func LastNameReplacement(lastName string) string {
+func ReplacementFunc(lastName string) string {
 	var buffer bytes.Buffer
 	buffer.WriteString(":")
 	for i := 0; i < utf8.RuneCountInString(lastName); i++ {
@@ -152,12 +152,12 @@ func TestMask(t *testing.T) {
 	for _, c := range maskCases {
 		p := NewKeywordProcessor()
 		p.SetCaseSensitive(false)
-		for cleanName, keywords := range c.KeywordDict {
+		for _, keywords := range c.KeywordDict {
 			for _, keyword := range keywords {
-				p.AddKeywordAndName(keyword, cleanName)
+				p.AddKeyword(keyword, false)
 			}
 		}
-		replaced := p.MaskKeywords(c.Sentence, LastNameReplacement)
+		replaced := p.MaskKeywords(c.Sentence, ReplacementFunc)
 
 		assert.EqualValues(t, c.Expected, replaced, c.Explaination)
 	}
@@ -166,12 +166,12 @@ func TestMask(t *testing.T) {
 	for _, c := range maskCases {
 		p := NewKeywordProcessor()
 		p.SetCaseSensitive(true)
-		for cleanName, keywords := range c.KeywordDict {
+		for _, keywords := range c.KeywordDict {
 			for _, keyword := range keywords {
-				p.AddKeywordAndName(keyword, cleanName)
+				p.AddKeyword(keyword, false)
 			}
 		}
-		replaced := p.MaskKeywords(c.Sentence, LastNameReplacement)
+		replaced := p.MaskKeywords(c.Sentence, ReplacementFunc)
 
 		assert.EqualValues(t, c.ExpectedCaseSensitive, replaced, c.Explaination)
 	}
